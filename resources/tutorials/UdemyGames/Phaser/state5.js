@@ -11,7 +11,7 @@ demo.state5.prototype = {
 		addChangeStateEventListeners();
 
 		goku = game.add.sprite(centerX, 500, 'goku');
-		platform = game.add.sprite(0, 800, 'platform');
+		platform = game.add.sprite(0, 750, 'platform');
 
 		platformGroup = game.add.group();
 
@@ -23,6 +23,7 @@ demo.state5.prototype = {
 
 
 		// flying platforms
+		platformGroup.create(0, 250, 'platform');
 		platformGroup.create(650, 500, 'platform');
 		platformGroup.create(1200, 220, 'platform');
 
