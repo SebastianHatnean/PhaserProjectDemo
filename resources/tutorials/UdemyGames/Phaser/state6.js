@@ -1,4 +1,4 @@
-var emitter;
+var emitter, volcano;
 demo.state6 = function(){};
 demo.state6.prototype = {
 	preload: function(){
@@ -14,10 +14,14 @@ demo.state6.prototype = {
 		game.stage.backgroundColor = '#F7BE81';;
 		addChangeStateEventListeners();
 
-		game.add.sprite(centerX, 1000, 'volcano').anchor.setTo(0.5, 1);
+		volcano = game.add.sprite(centerX, 1000, 'volcano');
+		volcano.anchor.setTo(0.5, 1);
 
-		emitter = game.add.emitter(centerX, 500, 2000);
-		emitter.makeParticles(['redBall', 'orangeBall'], 0, 5000, false, true);
+		//make volcano smaller
+		volcano.scale.setTo(0.5, 0.5);
+
+		emitter = game.add.emitter(centerX, 750, 200);
+		emitter.makeParticles(['redBall', 'orangeBall'], 0, 1500, false, true);
 		emitter.maxParticleSpeed.set(300, -300);
 		emitter.minParticleSpeed.set(-300, -100);
 		emitter.gravity = 300;

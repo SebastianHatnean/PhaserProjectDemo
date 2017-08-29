@@ -3,10 +3,13 @@ var centerX = 1500 / 2;
 var centerY = 1000 / 2;
 var goku;
 var speed = 10;
+var redBall;
+var orangeBall;
+
 demo.state0 = function(){};
 demo.state0.prototype = {
 	preload: function(){
-		game.load.image('goku', '/assets/sprites/goku1.png');
+		game.load.image('goku', '/assets/sprites/bestgoku.png');
 		game.load.image('background', '/assets/Backgrounds/background2.jpg');
 	},
 	create: function(){
@@ -20,7 +23,7 @@ demo.state0.prototype = {
 		goku = game.add.sprite(centerX, centerY, 'goku');
 		goku.anchor.setTo(0.5, 0.5);
 		// MAKE GOKU SMALLER
-		goku.scale.setTo(0.7, 0.7);
+		goku.scale.setTo(0.5, 0.5);
 		game.physics.enable(goku);
 		goku.body.collideWorldBounds = true;
 
