@@ -1,4 +1,4 @@
-var accel = 300, platform, smallPlatform, platformGroup, stars, score = 0, scoreText, emitter, volcano, redBall, orangeBall, emitter;
+var accel = 300, platform, smallPlatform, platformGroup, stars, diamond, score = 0, scoreText, emitter, volcano, redBall, orangeBall, emitter;
 
 demo.state5 = function(){};
 demo.state5.prototype = {
@@ -6,6 +6,7 @@ demo.state5.prototype = {
 		game.load.image('platform', 'assets/sprites/platform.png');
 		game.load.image('smallPlatform', 'assets/sprites/smallPlatform.png');
 		game.load.image('star', 'assets/sprites/star.png');
+		game.load.image('diamond', 'assets/sprites/diamond.png');
 
 
 		//volcano
@@ -74,6 +75,14 @@ demo.state5.prototype = {
 		stars = game.add.group();
 		stars.enableBody = true;
 
+		// the diamonds
+		diamonds = game.add.group();
+		diamonds.enableBody = true;
+
+		
+
+
+
 
 		// creating 10 stars in our game
 
@@ -87,6 +96,19 @@ demo.state5.prototype = {
 
 			// random bounce to every star
 			star.body.bounce.y = 0.7 + Math.random() * 0.2;
+		}
+
+		
+		// creating the diamonds
+		for ( var i = 0; i < 1; i++) {
+			// create a diamond inside of the diamonds group
+			var diamond = diamonds.create(i * 1, 500, 'diamond');
+
+			// gravity for the diamond
+			diamond.body.gravity.y = 500;
+
+			//random bounce to the diamond
+			diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
 		}
 
 		// the score
@@ -140,9 +162,11 @@ demo.state5.prototype = {
 		// collect with the collectStar function
 
 		game.physics.arcade.overlap(goku, stars, collectStar, null, this);
+		game.physics.arcade.overlap(goku, diamonds, collectDiamond, null, this);
 
 
 		game.physics.arcade.collide(stars, [platform, platformGroup, smallPlatform]);
+		game.physics.arcade.collide(diamonds, [platform, platformGroup, smallPlatform]);
 
 		game.physics.arcade.collide(emitter, [platform, platformGroup, smallPlatform]);
 
@@ -182,13 +206,6 @@ demo.state5.prototype = {
 
 			emitter.on = false;
 			game.time.events.removeAll();
-			// game.time.events.loop(500, function() {
-			// 	if (emitter.on) {
-			// 		emitter.on = false;
-			// 	} else {
-			// 		emitter.on = false;
-			// 	}
-			// });
 
 		});
 	}
@@ -203,6 +220,14 @@ function collectStar(goku, star){
 	score += 10;
 	scoreText.text = 'Score: ' + score;
 };
+
+function collectDiamond(goku, diamond){
+	diamond.kill();
+
+	score += 30;
+	scoreText.text = 'Score: ' + score;
+	console.log('You collect the diamond ! Good job!');
+}
 
 function killGoku(goku, emitter){
 	goku.kill();

@@ -4,7 +4,8 @@ demo.state2.prototype = {
 	preload: function(){
 		game.load.image('base', 'assets/sprites/canonbase.png');
 		game.load.image('barrel', 'assets/sprites/canonbarrel.png');
-		game.load.image('bullet', 'assets/sprites/bullet.png');
+		game.load.image('bullet', 'assets/sprites/bullet1.png');
+		
 	},
 	create: function(){
 		game.stage.backgroundColor = '#7DCEA0';;
