@@ -1,13 +1,13 @@
-var accel = 300, platform, smallPlatform, platformGroup, stars, diamond, score = 0, scoreText, emitter, volcano, redBall, orangeBall, emitter;
+var accel = 300, goku, platform, smallPlatform, platformGroup, stars, diamond, score = 0, scoreText, emitter, volcano, redBall, orangeBall, emitter;
 
 demo.state5 = function(){};
 demo.state5.prototype = {
 	preload: function(){
+		game.load.image('goku', '/assets/sprites/bestgoku.png');
 		game.load.image('platform', 'assets/sprites/platform.png');
 		game.load.image('smallPlatform', 'assets/sprites/smallPlatform.png');
 		game.load.image('star', 'assets/sprites/star.png');
 		game.load.image('diamond', 'assets/sprites/diamond.png');
-
 
 		//volcano
 		game.load.image('volcano', 'assets/sprites/volcano.png');
@@ -17,8 +17,10 @@ demo.state5.prototype = {
 		game.load.image('button2', 'assets/sprites/button2.png');
 	},
 	create: function(){
+		score = 0;
 		game.stage.backgroundColor = '#81DAF5';
 		addChangeStateEventListeners();
+		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 		volcano = game.add.sprite(centerX, 1000, 'volcano');
 
 
@@ -35,7 +37,6 @@ demo.state5.prototype = {
 		platformGroup.create(800, 970, 'platform');
 		platformGroup.create(1200, 970, 'platform');
 
-
 		// flying platforms
 		platformGroup.create(0, 150, 'platform');
 		platformGroup.create(250, 500, 'platform');
@@ -46,11 +47,7 @@ demo.state5.prototype = {
 		platformGroup.create(1050, 750, 'smallPlatform');
 		platformGroup.create(1400, 650, 'smallPlatform');
 
-
-
 		game.physics.enable([goku, platform, platformGroup, smallPlatform]);
-
-
 
 		// make goku smaller
 		goku.scale.setTo(0.6, 0.6);
@@ -63,8 +60,6 @@ demo.state5.prototype = {
 		// collide with the ground
 		goku.body.collideWorldBounds = true;
 		
-
-
 		platform.body.immovable = true;
 
 
@@ -78,11 +73,6 @@ demo.state5.prototype = {
 		// the diamonds
 		diamonds = game.add.group();
 		diamonds.enableBody = true;
-
-		
-
-
-
 
 		// creating 10 stars in our game
 
@@ -122,36 +112,44 @@ demo.state5.prototype = {
 		//make volcano smaller
 		volcano.scale.setTo(0.5, 0.5);
 
-		emitter = game.add.emitter(centerX, 750, 10);
-		emitter.makeParticles(['redBall', 'orangeBall'], 0, 2000, false, true);
+		emitter = game.add.emitter(centerX, 750, 1000);
+		emitter.makeParticles(['redBall', 'orangeBall'], 0, 20, true, true);
 		emitter.maxParticleSpeed.set(300, -600);
 		emitter.minParticleSpeed.set(-300, -200);
 		emitter.gravity = 300;
 
-
 		game.physics.enable([emitter, goku]);
 
 
-		var firstButton = game.add.button(1250, 20, 'button1');
+		// buttons if you want to add fire on/off
+		/*var firstButton = game.add.button(1250, 20, 'button1');
 		var secondButton = game.add.button(1380, 20, 'button2');
 		
-
-
 		firstButton.onInputDown.add(this.tintStart, firstButton);
-		secondButton.onInputDown.add(this.tintStop, secondButton);
-
-
+		secondButton.onInputDown.add(this.tintStop, secondButton);*/
 
 
 		//text under the buttons
 
-		var style = { font: "25px Arial bold", fill: "#990000" };
+		/*var style = { font: "25px Arial bold", fill: "#990000" };
 
     	textFireOn = game.add.text(1300, 120, "FIRE ON", style);
     	textFireOff = game.add.text(1435, 120, "FIRE OFF", style);
    		textFireOn.anchor.set(0.5);
-   		textFireOff.anchor.set(0.5);
+   		textFireOff.anchor.set(0.5);*/
 
+   		game.time.events.add(2000, function(){
+
+			emitter.start(false, 5000, 20);
+			game.time.events.loop(3000, function() {
+				if (emitter.on) {
+					emitter.on = false;
+				} else {
+					emitter.on = true;
+				}
+			});
+
+		});
 
 	},
 	update: function(){
@@ -174,24 +172,29 @@ demo.state5.prototype = {
 
 		if(game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
 			goku.body.acceleration.x = -accel;
-/*					goku.scale.setTo(0.6, 0.6);
-*/
+
 		} else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
 			goku.body.acceleration.x = accel;
-/*					goku.scale.setTo(-0.6, 0.6);
-*/
 		} else {
 			goku.body.acceleration.x = 0;
 		}
 		if(game.input.keyboard.isDown(Phaser.Keyboard.UP)){
 			goku.body.velocity.y = -500;
 		}
-	},
-	tintStart: function() {
+
+		if(score == 250){
+		console.log('You win the game');
+
+		this.game.state.restart();
+		this.game.state.start('state3', demo.state3);
+		}
+
+	}
+	/*tintStart: function() {
 		game.time.events.add(2000, function(){
 
 			emitter.start(false, 5000, 20);
-			game.time.events.loop(5000, function() {
+			game.time.events.loop(3000, function() {
 				if (emitter.on) {
 					emitter.on = false;
 				} else {
@@ -208,8 +211,10 @@ demo.state5.prototype = {
 			game.time.events.removeAll();
 
 		});
-	}
+	}*/
 };
+
+
 
 function collectStar(goku, star){
 	// collect the stars
@@ -219,6 +224,7 @@ function collectStar(goku, star){
 
 	score += 10;
 	scoreText.text = 'Score: ' + score;
+	
 };
 
 function collectDiamond(goku, diamond){
@@ -227,9 +233,16 @@ function collectDiamond(goku, diamond){
 	score += 30;
 	scoreText.text = 'Score: ' + score;
 	console.log('You collect the diamond ! Good job!');
-}
+};
 
 function killGoku(goku, emitter){
 	goku.kill();
+	console.log("Goku is dead... Try again !")
+	this.game.state.restart();
+		this.game.state.start('state3', demo.state3);
+};
+
+function shutDown() {
+	this.game.world.removeAll();
 } 
 

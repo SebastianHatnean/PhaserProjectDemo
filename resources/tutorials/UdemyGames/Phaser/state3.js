@@ -1,21 +1,23 @@
 demo.state3 = function(){};
 demo.state3.prototype = {
 	preload: function(){
-		game.load.image('button1', '/assets/sprites/button1.png');
-		game.load.image('button2', '/assets/sprites/button2.png');
-		game.load.image('button3', '/assets/sprites/button3.png');
+		game.load.image('startButton', '/assets/sprites/startGameButton.png');
+		game.load.image('pauseButton', '/assets/sprites/pauseGameButton.png');
+		game.load.image('exitButton', '/assets/sprites/exitGameButton.png');
 	},
 	create: function(){
 		game.stage.backgroundColor = '#819FF7';
+		
 		addChangeStateEventListeners();
+		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
-		var b1 = game.add.button(100, 100, 'button1', function(){
-			changeState(null, 1);
+		var b1 = game.add.button(centerX - 100, 300, 'startButton', function(){
+			changeState(null, 5);
 		});
-		var b2 = game.add.button(200, 200, 'button2', function(){
+		var b2 = game.add.button(centerX - 100, 400, 'pauseButton', function(){
 			changeState(null, 2);
 		});
-		var b3 = game.add.button(300, 300, 'button3');
+		var b3 = game.add.button(centerX - 50, 500, 'exitButton');
 
 		b1.onInputDown.add(this.tint, b1);
     	b2.onInputDown.add(this.tint, b2);
@@ -24,6 +26,9 @@ demo.state3.prototype = {
     	b1.onInputUp.add(this.unTint, b1);
     	b2.onInputUp.add(this.unTint, b2);
     	b3.onInputUp.add(this.unTint, b3);
+
+    	this.game.state.restart();
+    	
 	},
 	tint: function() {
 		this.tint = 0xbbbbbb;
